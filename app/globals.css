@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+@theme {
+  
+  --color-primary: var(--color-pink-600);
+  --color-primary-hover: var(--color-pink-700);
+  --color-primary-active: var(--color-pink-800);
+  
+  --color-secondary: var(--color-stone-900);
+  --color-background: var(--color-stone-50);
+  --color-accent: var(--color-rose-200);
+  
+}
+
+@layer base {
+  body {
+    background-color: var(--color-background);
+    color: var(--color-secondary);
+    direction: rtl;
+  }
+}
+
+@layer components {
+  /* Swiper Hero Pagination */
+  .hero-swiper .swiper-pagination-bullet {
+    background: white;
+    opacity: 0.7;
+    width: 8px;
+    height: 8px;
+  }
+
+  .hero-swiper .swiper-pagination-bullet-active {
+    background: var(--color-primary);
+    width: 24px;
+    border-radius: 9999px;
+    transition: all 0.3s ease;
+  }
+
+  .hero-swiper .swiper-pagination {
+    bottom: 24px !important;
+  }
+}
+

@@ -1,0 +1,8 @@
+export type AuthState =
+  | { status: "idle" }
+  | { status: "success"; message: string }
+  | {
+      status: "error";
+      message: string;
+      fieldErrors?: Record<string, string>;
+    };
