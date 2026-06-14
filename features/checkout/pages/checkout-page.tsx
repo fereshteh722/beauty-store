@@ -1,86 +1,89 @@
 "use client";
 
-import { useCart } from "@/features/cart/context/cart-context";
-import { useCheckoutForm } from "@/features/checkout/hooks/use-checkout-form";
-import { CheckoutForm } from "@/features/checkout/components/checkout-form";
-import { OrderSummary } from "@/features/cart/components/order-summary";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { CheckoutForm } from "@/features/checkout/components/checkout-form";
+import { useCheckoutForm } from "@/features/checkout/hooks/use-checkout-form";
 
-export function CheckoutPage() {
-  const { items, isInitialized } = useCart();
+function generateOrderNumber() {
+  const random = Math.floor(1000 + Math.random() * 9000);
+  return `ORD-${Date.now().toString().slice(-6)}-${random}`;
+}
+
+export default function CheckoutPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   const {
     form,
     errors,
     touched,
-    isValid,
-    setTouched,
+    submitted,
+    handleChange,
     handleBlur,
-    handleChange
+    handleSubmitAttempt,
+    isValid,
   } = useCheckoutForm();
 
-  useEffect(() => {
-    if (isInitialized && items.length === 0) {
-      router.replace("/products");
-    }
-  }, [items, isInitialized, router]);
-
-  const submitHandler = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setSubmitError("");
 
-    setTouched({
-      fullName: true,
-      phone: true,
-      province: true,
-      city: true,
-      address: true,
-      paymentMethod: true
-    });
+    const isValidForm = handleSubmitAttempt();
 
-    if (!isValid) return;
+    if (!isValidForm) {
+      return;
+    }
 
-    setLoading(true);
+    try {
+      setLoading(true);
 
-    await new Promise((r) => setTimeout(r, 1500));
+      const orderNumber = generateOrderNumber();
+      sessionStorage.setItem("last_order_number", orderNumber);
 
-    const num = `${Date.now()}-${Math.floor(100000 + Math.random() * 900000)}`;
-    sessionStorage.setItem("last_order_number", num);
-
-    router.push("/checkout/success");
+      router.push("/checkout/success");
+    } catch {
+      setSubmitError("ثبت سفارش با مشکل مواجه شد. لطفاً دوباره تلاش کنید.");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  if (!isInitialized || items.length === 0) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="w-10 h-10 rounded-full border-4 border-t-pink-600 border-stone-300 animate-spin"></div>
-      </div>
-    );
-  }
-
   return (
-    <main className="min-h-screen bg-stone-50 py-12 px-4">
-      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
-        
-        <div className="lg:col-span-8">
-          <CheckoutForm
-            form={form}
-            errors={errors}
-            touched={touched}
-            loading={loading}
-            isFormValid={isValid}
-            onBlur={handleBlur}
-            onChange={handleChange}
-            onSubmit={submitHandler}
-          />
+    <main className="min-h-screen bg-stone-50/50 px-4 py-10 md:px-6 md:py-14">
+      <div className="mx-auto w-full max-w-4xl">
+        <div className="mb-8 text-center md:mb-10">
+          <span className="mb-3 inline-block text-[11px] font-semibold uppercase tracking-[0.24em] text-stone-400">
+            Checkout
+          </span>
+
+          <h1 className="text-2xl font-black tracking-tight text-stone-900 md:text-4xl">
+            تکمیل سفارش
+          </h1>
+
+          <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-stone-500 md:text-base">
+            اطلاعات ارسال و تماس خود را بررسی کنید تا سفارش شما نهایی شود.
+          </p>
         </div>
 
-        <aside className="lg:col-span-4">
-          <OrderSummary />
-        </aside>
+        {submitError ? (
+          <div className="mb-6 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+            {submitError}
+          </div>
+        ) : null}
 
+        <CheckoutForm
+          form={form}
+          errors={errors}
+          touched={touched}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          onSubmit={handleSubmit}
+          loading={loading}
+          isFormValid={isValid}
+          submitted={submitted}
+        />
       </div>
     </main>
   );

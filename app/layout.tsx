@@ -6,9 +6,13 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 
 export const metadata: Metadata = {
-  title: "فروشگاه زیبایی | BeautyStore",
+  title: {
+    default: "فروشگاه زیبایی | BeautyStore",
+    template: "%s | BeautyStore",
+  },
   description: "بهترین محصولات مراقبت از پوست و مو",
 };
+
 
 export default function RootLayout({
   children,

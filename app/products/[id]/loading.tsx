@@ -1,5 +1,5 @@
 // src/app/products/[id]/loading.tsx
-import { Container } from "@/component/layout/container";
+import { Container } from "@/components/layout/container";
 
 function cn(...classes: Array<string | undefined | false>) {
   return classes.filter(Boolean).join(" ");

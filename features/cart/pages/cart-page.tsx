@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { CartContainer } from "@/features/cart/components/cart-container";
 
 export const metadata: Metadata = {
-  title: "سبد خرید | فروشگاه زیبایی",
+  title: "سبد خرید",
   description: "مدیریت و نهایی‌سازی محصولات انتخاب شده در سبد خرید",
 };
 

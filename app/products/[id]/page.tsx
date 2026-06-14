@@ -4,7 +4,7 @@ import { Container } from "@/components/layout/container";
 import { getProductById, getRelatedProducts } from "@/lib/api/products";
 import { AddToCartButton } from "@/features/cart/components/add-to-cart-button";
 import { RelatedProducts } from "@/features/products/components/related-products";
-import { calculateDiscountedPrice, formatPrice } from "@/utils/price";
+import { calculateDiscountedPrice, formatPrice } from "@/lib/utils/price";
 
 interface ProductPageProps {
   params: Promise<{ id: string }>;

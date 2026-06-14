@@ -7,9 +7,10 @@ export default function PopularBrands() {
     "/pics-project/brands/3.png",
     "/pics-project/brands/4.png",
     "/pics-project/brands/1.jpg",
-    "/pics-project/brands/2.jpg",
+    //"/pics-project/brands/2.jpg",
     "/pics-project/brands/3.jpg",
     "/pics-project/brands/4.jpg",
+    "/pics-project/brands/5.jpg"
   ];
 
   return (

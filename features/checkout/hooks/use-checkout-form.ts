@@ -1,71 +1,94 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { checkoutSchema } from "../schema/checkout-schema";
+import {
+  CheckoutFormValues,
+  CheckoutFormErrors,
+  CheckoutFormTouched,
+} from "../types/checkout-type";
 
-export type PaymentMethod = "online";
-
-export interface FormValues {
-  fullName: string;
-  phone: string;
-  province: string;
-  city: string;
-  address: string;
-  paymentMethod: PaymentMethod;
-}
+const initialForm: CheckoutFormValues = {
+  fullName: "",
+  phone: "",
+  province: "",
+  city: "",
+  address: "",
+  postalCode: "",
+};
 
 export function useCheckoutForm() {
-  const [form, setForm] = useState<FormValues>({
-    fullName: "",
-    phone: "",
-    province: "",
-    city: "",
-    address: "",
-    paymentMethod: "online",
-  });
+  const [form, setForm] = useState<CheckoutFormValues>(initialForm);
+  const [touched, setTouched] = useState<CheckoutFormTouched>({});
+  const [submitted, setSubmitted] = useState(false);
 
-  const [touched, setTouched] = useState<Record<keyof FormValues, boolean>>({
-    fullName: false,
-    phone: false,
-    province: false,
-    city: false,
-    address: false,
-    paymentMethod: false,
-  });
+  const validation = useMemo(() => {
+    const result = checkoutSchema.safeParse(form);
 
-  const phoneRegex = /^09\d{9}$/;
+    if (result.success) {
+      return {
+        errors: {} as CheckoutFormErrors,
+        isValid: true,
+      };
+    }
 
-  const errors = useMemo(() => {
-    const e: Partial<Record<keyof FormValues, string>> = {};
-    if (form.fullName.trim().length < 3) e.fullName = "نام معتبر نیست";
-    if (!phoneRegex.test(form.phone.trim())) e.phone = "شماره موبایل اشتباه است";
-    if (form.province.trim().length < 2) e.province = "استان را وارد کنید";
-    if (form.city.trim().length < 2) e.city = "شهر را وارد کنید";
-    if (form.address.trim().length < 10) e.address = "آدرس دقیق‌تر نیاز است";
-    return e;
+    const errors: CheckoutFormErrors = {};
+
+    for (const issue of result.error.issues) {
+      const field = issue.path[0] as keyof CheckoutFormValues;
+
+      if (!errors[field]) {
+        errors[field] = issue.message;
+      }
+    }
+
+    return {
+      errors,
+      isValid: false,
+    };
   }, [form]);
 
-  const isValid = Object.keys(errors).length === 0;
-
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    field: keyof CheckoutFormValues,
+    value: string
   ) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    setForm((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
   };
 
-  const handleBlur = (
-    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setTouched((prev) => ({ ...prev, [e.target.name]: true }));
+  const handleBlur = (field: keyof CheckoutFormValues) => {
+    setTouched((prev) => ({
+      ...prev,
+      [field]: true,
+    }));
+  };
+
+  const touchAllFields = () => {
+    const allTouched: CheckoutFormTouched = {};
+
+    for (const key in form) {
+      allTouched[key as keyof CheckoutFormValues] = true;
+    }
+
+    setTouched(allTouched);
+  };
+
+  const handleSubmitAttempt = () => {
+    setSubmitted(true);
+    touchAllFields();
+    return validation.isValid;
   };
 
   return {
     form,
+    errors: validation.errors,
+    isValid: validation.isValid,
     touched,
-    errors,
-    isValid,
-    setTouched,
+    submitted,
     handleChange,
     handleBlur,
+    handleSubmitAttempt,
   };
 }

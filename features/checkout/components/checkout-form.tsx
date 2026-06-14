@@ -1,16 +1,22 @@
 "use client";
 
-import { CheckoutFormValues, CheckoutFormErrors } from "@/features/checkout/types";
+import {
+  CheckoutFormValues,
+  CheckoutFormErrors,
+  CheckoutFormTouched,
+} from "@/features/checkout/types/checkout-type";
+import { FormField } from "@/features/checkout/components/form-field";
 
 interface Props {
   form: CheckoutFormValues;
   errors: CheckoutFormErrors;
-  touched: Record<keyof CheckoutFormValues, boolean>;
-  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
-  onBlur: (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  touched: CheckoutFormTouched;
+  onChange: (field: keyof CheckoutFormValues, value: string) => void;
+  onBlur: (field: keyof CheckoutFormValues) => void;
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   loading: boolean;
   isFormValid: boolean;
+  submitted?: boolean;
 }
 
 export function CheckoutForm({
@@ -21,147 +27,174 @@ export function CheckoutForm({
   onBlur,
   onSubmit,
   loading,
-  isFormValid
+  isFormValid,
+  submitted = false,
 }: Props) {
-
-  const inputClasses = (name: keyof CheckoutFormValues) => `
-    w-full rounded-xl p-4 text-sm transition-all duration-300 outline-none border
-    ${touched[name] && errors[name] 
-      ? "bg-rose-50 border-rose-300 focus:border-rose-400" 
-      : "bg-white border-stone-200 focus:border-pink-600 focus:ring-1 focus:ring-pink-100"}
-    text-stone-900 placeholder:text-stone-400
-  `;
+  // دکمه فقط هنگام ارسال لودینگ غیرفعال می‌شود
+  const isButtonDisabled = loading;
 
   return (
     <form id="checkout-form" onSubmit={onSubmit} className="space-y-6">
 
-      {/* Step 1 */}
+      {/* بخش ۱: مشخصات تحویل‌گیرنده */}
       <section className="bg-white rounded-2xl shadow-sm border border-stone-100 p-6 md:p-8">
         <div className="flex items-center gap-4 mb-8">
-          <span className="w-8 h-8 rounded-full bg-stone-900 text-white flex items-center justify-center text-sm font-bold">
-            1
+          <span className="w-8 h-8 flex items-center justify-center rounded-full bg-stone-900 text-white font-bold text-sm">
+            ۱
           </span>
           <h2 className="text-lg font-bold">مشخصات تحویل‌گیرنده</h2>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-2">
-            <label className="text-xs font-semibold text-stone-500">نام و نام خانوادگی</label>
-            <input
-              name="fullName"
-              value={form.fullName}
-              onChange={onChange}
-              onBlur={onBlur}
-              className={inputClasses("fullName")}
-              placeholder="سارا احمدی"
-            />
-            {touched.fullName && errors.fullName && (
-              <p className="text-[11px] text-rose-600">{errors.fullName}</p>
-            )}
-          </div>
+          <FormField
+            label="نام و نام خانوادگی"
+            name="fullName"
+            value={form.fullName}
+            placeholder="مثلاً: سارا احمدی"
+            errors={errors}
+            touched={touched}
+            onChange={(e) => onChange("fullName", e.target.value)}
+            onBlur={() => onBlur("fullName")}
+          />
 
-          <div className="space-y-2">
-            <label className="text-xs font-semibold text-stone-500">شماره تماس</label>
-            <input
-              name="phone"
-              value={form.phone}
-              onChange={onChange}
-              onBlur={onBlur}
-              dir="ltr"
-              className={inputClasses("phone")}
-              placeholder="09123456789"
-            />
-            {touched.phone && errors.phone && (
-              <p className="text-[11px] text-rose-600">{errors.phone}</p>
-            )}
-          </div>
+          <FormField
+            label="شماره تماس"
+            name="phone"
+            type="tel"
+            value={form.phone}
+            placeholder="09123456789"
+            dir="ltr"
+            errors={errors}
+            touched={touched}
+            onChange={(e) => onChange("phone", e.target.value)}
+            onBlur={() => onBlur("phone")}
+          />
         </div>
       </section>
 
-      {/* Step 2 */}
+      {/* بخش ۲: نشانی و محل تحویل */}
       <section className="bg-white rounded-2xl shadow-sm border border-stone-100 p-6 md:p-8">
         <div className="flex items-center gap-4 mb-8">
-          <span className="w-8 h-8 rounded-full bg-stone-900 text-white flex items-center justify-center text-sm font-bold">
-            2
+          <span className="w-8 h-8 flex items-center justify-center rounded-full bg-stone-900 text-white font-bold text-sm">
+            ۲
           </span>
           <h2 className="text-lg font-bold">نشانی و محل تحویل</h2>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          <input
+          <FormField
+            label="استان"
             name="province"
             value={form.province}
-            onChange={onChange}
-            onBlur={onBlur}
-            className={inputClasses("province")}
-            placeholder="استان"
+            placeholder="تهران"
+            errors={errors}
+            touched={touched}
+            onChange={(e) => onChange("province", e.target.value)}
+            onBlur={() => onBlur("province")}
           />
-          {touched.province && errors.province && (
-            <p className="text-[11px] text-rose-600">{errors.province}</p>
-          )}
 
-          <input
+          <FormField
+            label="شهر"
             name="city"
             value={form.city}
-            onChange={onChange}
-            onBlur={onBlur}
-            className={inputClasses("city")}
-            placeholder="شهر"
+            placeholder="تهران"
+            errors={errors}
+            touched={touched}
+            onChange={(e) => onChange("city", e.target.value)}
+            onBlur={() => onBlur("city")}
           />
-          {touched.city && errors.city && (
-            <p className="text-[11px] text-rose-600">{errors.city}</p>
-          )}
         </div>
 
-        <textarea
+        <FormField
+          label="آدرس دقیق"
           name="address"
+          textarea
           value={form.address}
-          onChange={onChange}
-          onBlur={onBlur}
-          className={`${inputClasses("address")} resize-none`}
-          rows={3}
-          placeholder="پلاک، واحد، آدرس دقیق"
+          placeholder="پلاک، واحد، کوچه، خیابان"
+          errors={errors}
+          touched={touched}
+          onChange={(e) => onChange("address", e.target.value)}
+          onBlur={() => onBlur("address")}
         />
-        {touched.address && errors.address && (
-          <p className="text-[11px] text-rose-600">{errors.address}</p>
-        )}
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+          <FormField
+            label="کد پستی"
+            name="postalCode"
+            type="text"
+            dir="ltr"
+            value={form.postalCode}
+            placeholder="1234567890"
+            errors={errors}
+            touched={touched}
+            onChange={(e) => onChange("postalCode", e.target.value)}
+            onBlur={() => onBlur("postalCode")}
+          />
+        </div>
       </section>
 
-      {/* Step 3 */}
+      {/* بخش ۳: روش پرداخت */}
       <section className="bg-white rounded-2xl shadow-sm border border-stone-100 p-6 md:p-8">
         <div className="flex items-center gap-4 mb-8">
-          <span className="w-8 h-8 rounded-full bg-stone-900 text-white flex items-center justify-center text-sm font-bold">
-            3
+          <span className="w-8 h-8 flex items-center justify-center rounded-full bg-stone-900 text-white font-bold text-sm">
+            ۳
           </span>
           <h2 className="text-lg font-bold">روش پرداخت</h2>
         </div>
 
-        <label className="cursor-pointer flex items-center p-4 border-2 rounded-xl border-pink-600 bg-pink-50/30">
-          <input type="radio" checked readOnly className="hidden" />
-          <div className="flex flex-col">
-            <span className="font-bold text-sm">پرداخت آنلاین</span>
-            <span className="text-[11px] text-stone-500 mt-1">تمام کارت‌های شتاب</span>
+        <div className="p-4 border-2 border-stone-100 rounded-xl bg-stone-50/40 flex items-center justify-between">
+          <div>
+            <p className="font-bold text-sm text-stone-900">پرداخت آنلاین (درگاه بانکی)</p>
+            <p className="text-[11px] text-stone-500 mt-1">
+              قابل پرداخت با تمام کارت‌های عضو شتاب
+            </p>
           </div>
-          <span className="mr-auto w-4 h-4 rounded-full border-4 border-pink-600"></span>
-        </label>
+          <div className="h-5 w-5 rounded-full border-4 border-pink-600 bg-white" />
+        </div>
       </section>
 
-      <button
-        type="submit"
-        disabled={loading || !isFormValid}
-        className={`
-          w-full py-4 rounded-xl font-bold text-white transition-all
-          ${loading ? "bg-stone-400" : "bg-pink-600 hover:bg-pink-700"}
-        `}
-      >
-        {loading ? "در حال پردازش..." : "تکمیل و پرداخت نهایی"}
-      </button>
+      {/* دکمه نهایی */}
+      <div className="pt-4">
+        <button
+          type="submit"
+          disabled={isButtonDisabled}
+          className={`w-full py-4 rounded-xl font-bold text-white transition-all duration-200 active:scale-[0.98] ${
+            isButtonDisabled
+              ? "bg-stone-300 cursor-not-allowed"
+              : "bg-stone-900 hover:bg-pink-600 shadow-lg shadow-stone-200"
+          }`}
+        >
+          {loading ? (
+            <span className="flex items-center justify-center gap-2">
+              <svg className="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24">
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                  fill="none"
+                />
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                />
+              </svg>
+              در حال پردازش...
+            </span>
+          ) : (
+            "ثبت و پرداخت نهایی"
+          )}
+        </button>
 
-      {!isFormValid && (
-        <p className="text-[10px] text-rose-500 text-center mt-2">
-          لطفاً اطلاعات ضروری را وارد کنید
-        </p>
-      )}
+        {!isFormValid && submitted && (
+          <p className="text-[13px] font-medium text-rose-600 text-center mt-4 bg-rose-50 py-2 rounded-lg border border-rose-100">
+            برخی از فیلدها نیاز به اصلاح دارند. لطفاً فرم را چک کنید.
+          </p>
+        )}
+      </div>
     </form>
   );
 }
