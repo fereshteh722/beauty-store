@@ -40,14 +40,6 @@ export function AuthShell({ title, subtitle, children }: Props) {
             </div>
           </section>
 
-          <aside className="hidden lg:block lg:col-span-6">
-            <div className="h-full rounded-[2rem] border border-black/5 bg-white p-10 shadow-sm">
-              <h2 className="text-lg font-bold">تجربه خرید شخصی‌سازی‌شده</h2>
-              <p className="mt-3 text-sm text-stone-600">
-                با ورود به حساب کاربری، سفارش‌ها را پیگیری کنید.
-              </p>
-            </div>
-          </aside>
         </div>
       </Container>
     </main>

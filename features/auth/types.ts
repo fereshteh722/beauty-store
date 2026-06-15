@@ -1,8 +1,11 @@
-export type AuthState =
-  | { status: "idle" }
-  | { status: "success"; message: string }
-  | {
-      status: "error";
-      message: string;
-      fieldErrors?: Record<string, string>;
-    };
+export type AuthFieldErrors = {
+  phone?: string;
+  password?: string;
+  confirmPassword?: string;
+};
+
+export type AuthState = {
+  status: "idle" | "success" | "error";
+  message?: string;
+  fieldErrors?: AuthFieldErrors;
+};

@@ -1,43 +1,48 @@
 "use server";
 
-import { AuthState } from "../types";
+import { loginSchema } from "../schema/auth-schema";
+import { AuthState, AuthFieldErrors } from "../types";
 
-function isIranMobile(input: string) {
-  const s = input.replace(/\s|-/g, "");
-  return /^(\+98|0)?9\d{9}$/.test(s);
-}
+
+const fieldErrors: AuthFieldErrors = {};
+
 
 export async function loginAction(
   _prev: AuthState,
   formData: FormData
 ): Promise<AuthState> {
-  const phone = String(formData.get("phone") ?? "");
-  const password = String(formData.get("password") ?? "");
   const company = String(formData.get("company") ?? "");
 
+  
   if (company) {
     return { status: "error", message: "درخواست نامعتبر است." };
   }
 
-  const errors: Record<string, string> = {};
+  const rawData = {
+    phone: String(formData.get("phone") ?? ""),
+    password: String(formData.get("password") ?? ""),
+  };
 
-  if (!isIranMobile(phone)) {
-    errors.phone = "شماره موبایل معتبر نیست.";
-  }
+  const result = loginSchema.safeParse(rawData);
 
-  if (password.length < 6) {
-    errors.password = "رمز عبور باید حداقل ۶ کاراکتر باشد.";
-  }
+  if (!result.success) {
+    const fieldErrors: Record<string, string> = {};
 
-  if (Object.keys(errors).length) {
+    result.error.issues.forEach((issue) => {
+      const field = issue.path[0] as string;
+      if (!fieldErrors[field]) {
+        fieldErrors[field] = issue.message;
+      }
+    });
+
     return {
       status: "error",
       message: "اطلاعات ورود صحیح نیست.",
-      fieldErrors: errors,
+      fieldErrors,
     };
   }
 
-  // TODO: connect to DB + create session
+  // ✅ TODO: connect to DB + create session
   await new Promise((r) => setTimeout(r, 500));
 
   return {
