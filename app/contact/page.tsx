@@ -23,9 +23,9 @@ export default function ContactPage() {
 
           <section className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:gap-8">
 
-            <div className="lg:col-span-5">
+            <aside className="lg:col-span-5">
               {/* contact info */}
-            </div>
+            </aside>
 
             <div className="lg:col-span-7">
               <ContactForm />

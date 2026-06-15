@@ -1,41 +1,31 @@
 "use server";
 
 import { ContactState } from "@/features/contact/types";
-
-function isIranMobile(input: string) {
-  const s = input.replace(/\s|-/g, "");
-  return /^(\+98|0)?9\d{9}$/.test(s);
-}
+import { contactSchema } from "@/features/contact/schema/contact-schema";
 
 export async function submitContact(
   _prevState: ContactState,
   formData: FormData
 ): Promise<ContactState> {
-  const name = String(formData.get("name") ?? "").trim();
-  const phone = String(formData.get("phone") ?? "").trim();
-  const message = String(formData.get("message") ?? "").trim();
+  const rawData = {
+    name: String(formData.get("name") ?? ""),
+    phone: String(formData.get("phone") ?? ""),
+    message: String(formData.get("message") ?? ""),
+  };
 
-  const company = String(formData.get("company") ?? "").trim();
+  const result = contactSchema.safeParse(rawData);
 
-  if (company) {
-    return { status: "error", message: "درخواست نامعتبر است." };
-  }
+  if (!result.success) {
+    const fieldErrors: Record<string, string> = {};
 
-  const fieldErrors: Record<string, string> = {};
+    result.error.issues.forEach((issue) => {
+      const field = issue.path[0] as string;
 
-  if (name.length < 3) {
-    fieldErrors.name = "نام را کامل وارد کنید.";
-  }
+      if (!fieldErrors[field]) {
+        fieldErrors[field] = issue.message;
+      }
+    });
 
-  if (!isIranMobile(phone)) {
-    fieldErrors.phone = "شماره موبایل معتبر وارد کنید.";
-  }
-
-  if (message.length < 10) {
-    fieldErrors.message = "متن پیام باید حداقل ۱۰ کاراکتر باشد.";
-  }
-
-  if (Object.keys(fieldErrors).length) {
     return {
       status: "error",
       message: "لطفاً موارد مشخص‌شده را اصلاح کنید.",

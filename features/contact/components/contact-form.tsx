@@ -30,14 +30,6 @@ export default function ContactForm() {
 
       <form action={action} className="space-y-4">
 
-        <input
-          type="text"
-          name="company"
-          tabIndex={-1}
-          autoComplete="off"
-          className="hidden"
-        />
-
         <div>
           <label className="mb-2 block text-sm font-medium text-stone-700">
             نام و نام خانوادگی
