@@ -1,32 +1,31 @@
-BeautyStore – Modern E‑Commerce Frontend
-BeautyStore is a modern, scalable e‑commerce frontend built with Next.js App Router, TypeScript, and Tailwind CSS.
+BeautyStore is a modern and scalable e‑commerce frontend built with Next.js App Router, TypeScript, and Tailwind CSS.
 
-The project follows a feature‑based architecture and clean separation of concerns to keep the codebase maintainable and production‑ready.
+The project demonstrates how to build a performant online store UI using modern React architecture, server components, and a feature‑based project structure.
 
-The application demonstrates how to build a performant online store UI with modular components, server‑side rendering, and scalable architecture patterns.
+It is designed as a portfolio‑grade frontend architecture example for building large‑scale Next.js applications.
 
 Tech Stack
 Next.js (App Router)
 React
 TypeScript
 Tailwind CSS
-Swiper.js (for product and hero sliders)
+Swiper.js (product & hero sliders)
 Key Features
 Modern responsive e‑commerce UI
-Feature‑based architecture for scalability
-Server Components for performance
-Reusable UI components
-Product sliders with Swiper
+Feature‑based scalable architecture
+Server Components for better performance
+Modular reusable UI components
+Product sliders using Swiper
 Cart system using React Context
 Checkout form with validation
 Authentication module structure
-Contact form with server actions
+Contact form with Server Actions
 Blog structure for SEO content
 Project Structure
 text
 src
 │
-├── app
+├── app                # Next.js routing layer
 │   ├── layout.tsx
 │   ├── page.tsx
 │   ├── cart
@@ -34,14 +33,14 @@ src
 │   ├── contact
 │   └── blog
 │
-├── components
+├── components         # Global reusable UI components
 │   ├── layout
 │   │   ├── header.tsx
 │   │   ├── footer.tsx
 │   │   └── container.tsx
 │   └── ui
 │
-├── features
+├── features           # Feature-based modules
 │   ├── auth
 │   ├── cart
 │   ├── checkout
@@ -49,42 +48,41 @@ src
 │   ├── home
 │   └── products
 │
-├── lib
+├── lib                # Utilities and shared logic
 │   └── api
 │
-├── types
-│
+├── types              # TypeScript types
 └── styles
 Architecture Principles
-The project uses a feature‑driven architecture:
+The project follows a feature-driven architecture:
 
 app/
 
-Routing layer only (Next.js App Router).
+Handles routing using the Next.js App Router.
 
 features/
 
-Business logic and UI grouped by domain (cart, auth, checkout, etc.).
+Contains domain logic and UI grouped by feature (cart, auth, checkout, etc.).
 
 components/
 
-Reusable global UI components.
+Reusable UI components shared across the application.
 
 lib/
 
-API calls, utilities, and shared logic.
+Utility functions, helpers, and API logic.
 
-This structure keeps the project modular, scalable, and easy to maintain.
+This architecture keeps the codebase modular, scalable, and maintainable.
 
 Home Page Sections
-The homepage is composed of several modular sections:
+The homepage is built from modular components:
 
 Hero Banner Slider
 Category Banners
 Special Offer Products
 New Arrivals
 Popular Brands
-Each section is implemented as an isolated component inside:
+All sections are located in:
 
 text
 features/home
@@ -107,12 +105,12 @@ text
 http://localhost:3000
 Scripts
 text
-npm run dev      # start development server
-npm run build    # production build
-npm run start    # run production build
-npm run lint     # run ESLint
+npm run dev     # Start development server
+npm run build   # Production build
+npm run start   # Run production build
+npm run lint    # Run ESLint
 Future Improvements
-Planned enhancements for production use:
+Planned production features:
 
 Backend integration (API / database)
 Authentication with JWT or OAuth
@@ -130,4 +128,4 @@ Structuring large applications with feature modules
 Creating reusable UI components
 Implementing modern frontend architecture patterns
 License
-This project is for educational and portfolio purposes.
+This project is created for educational and portfolio purposes.
