@@ -26,20 +26,13 @@ export async function PostPage({ slug }: PostPageProps) {
                 {new Date(post.publishedAt).toLocaleDateString("fa-IR")}
               </time>
 
-              {post.readingTimeMinutes && (
-                <span>{post.readingTimeMinutes} دقیقه زمان مطالعه</span>
-              )}
             </div>
 
             <h1 className="mt-5 text-3xl sm:text-4xl lg:text-5xl font-black text-stone-900 leading-tight">
               {post.title}
             </h1>
 
-            {post.excerpt && (
-              <p className="mt-4 max-w-2xl text-stone-600 leading-7">
-                {post.excerpt}
-              </p>
-            )}
+            
           </header>
 
           <div className="relative mb-12 aspect-[14/7] w-full overflow-hidden rounded-[2rem] border border-black/5 bg-stone-100 shadow-[0_20px_60px_rgba(0,0,0,0.05)]">

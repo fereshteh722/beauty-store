@@ -18,7 +18,6 @@ export function RelatedProducts({ products }: { products: Product[] }) {
 
   return (
     <div className="relative">
-      {/* هدر ساده بدون فلش‌ها */}
       <div className="flex items-center mb-6">
         <h2 className="text-xl font-bold text-stone-900 border-r-2 border-pink-600 pr-3">
           محصولات مرتبط

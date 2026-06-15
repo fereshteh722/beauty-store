@@ -1,11 +1,13 @@
 import { PostPage } from "@/features/blog/pages/post-page";
 
 interface PageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
-export default function Page({ params }: PageProps) {
-  return <PostPage slug={params.slug} />;
+export default async function Page({ params }: PageProps) {
+  const { slug } = await params;
+
+  return <PostPage slug={slug} />;
 }
