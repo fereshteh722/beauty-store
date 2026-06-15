@@ -1,17 +1,31 @@
-// features/search/utils/filter-logic.ts
 import { Product } from "@/types/product";
 
-export const filterProducts = (products: Product[], query: string): Product[] => {
-  if (!query) return [];
-  
-  const normalizedQuery = query.toLowerCase().trim();
-  
-  return products.filter((product) => {
-    // استفاده از ?. برای اطمینان از اینکه اگر فیلدی خالی بود، برنامه کرش نکند
-    const nameMatch = product.name?.toLowerCase().includes(normalizedQuery);
-    const categoryMatch = product.category?.toLowerCase().includes(normalizedQuery);
-    const descriptionMatch = product.description?.toLowerCase().includes(normalizedQuery);
-    
-    return nameMatch || categoryMatch || descriptionMatch;
-  }).slice(0, 6);
+const normalize = (value?: string) => value?.toLowerCase() ?? "";
+
+export const filterProducts = (
+  products: Product[],
+  query: string
+): Product[] => {
+  const normalizedQuery = query.trim().toLowerCase();
+  if (!normalizedQuery) return [];
+
+  const results: Product[] = [];
+
+  for (const product of products) {
+    const name = normalize(product.name);
+    const category = normalize(product.category);
+    const description = normalize(product.description);
+
+    if (
+      name.includes(normalizedQuery) ||
+      category.includes(normalizedQuery) ||
+      description.includes(normalizedQuery)
+    ) {
+      results.push(product);
+    }
+
+    if (results.length === 6) break;
+  }
+
+  return results;
 };

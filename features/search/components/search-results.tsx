@@ -9,11 +9,7 @@ interface SearchResultsProps {
   closeSearch: () => void;
 }
 
-export function SearchResults({
-  results,
-  query,
-  closeSearch,
-}: SearchResultsProps) {
+export function SearchResults({ results, query, closeSearch }: SearchResultsProps) {
   if (results.length === 0 && query.length >= 2) {
     return (
       <div
@@ -25,12 +21,12 @@ export function SearchResults({
     );
   }
 
-  if (results.length === 0) return null;
+  if (!results.length) return null;
 
   return (
     <div
       role="listbox"
-      className="absolute top-full left-0 right-0 mt-2 bg-white border border-stone-200 rounded-2xl overflow-hidden shadow-2xl z-[150] animate-in fade-in slide-in-from-top-2 duration-300"
+      className="absolute top-full left-0 right-0 mt-2 bg-white border border-stone-200 rounded-2xl overflow-hidden shadow-2xl z-[150]"
     >
       <div className="p-2">
         {results.map((product) => (
@@ -43,7 +39,7 @@ export function SearchResults({
           >
             <div className="relative h-12 w-12 rounded-lg overflow-hidden border border-stone-100 shrink-0">
               <Image
-                src={product.image}
+                src={product.image || "/images/placeholder.png"}
                 alt={product.name}
                 fill
                 sizes="48px"
@@ -60,17 +56,15 @@ export function SearchResults({
               </p>
             </div>
 
-            <div className="text-left">
-              <span className="text-[13px] font-black text-stone-900">
-                {formatPrice(product.price)} تومان
-              </span>
-            </div>
+            <span className="text-[13px] font-black text-stone-900">
+              {formatPrice(product.price)} تومان
+            </span>
           </Link>
         ))}
       </div>
 
       <Link
-        href={`/search?q=${query}`}
+        href={`/search?q=${encodeURIComponent(query)}`}
         onClick={closeSearch}
         className="block w-full py-3 bg-stone-50 border-t border-stone-100 text-center text-[12px] font-bold text-stone-500 hover:text-pink-600 transition-colors"
       >

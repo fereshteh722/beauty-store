@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { Product } from "@/types/product";
 import { filterProducts } from "../utils/filter-logic";
 
+const DEBOUNCE_TIME = 300;
+
 export const useProductSearch = (products: Product[]) => {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<Product[]>([]);
@@ -10,19 +12,24 @@ export const useProductSearch = (products: Product[]) => {
   useEffect(() => {
     if (query.length < 2) {
       setResults([]);
+      setIsSearching(false);
       return;
     }
 
-    setIsSearching(true);
-
-    const handler = setTimeout(() => {
+    const timer = setTimeout(() => {
+      setIsSearching(true);
       const filtered = filterProducts(products, query);
       setResults(filtered);
       setIsSearching(false);
-    }, 300);
+    }, DEBOUNCE_TIME);
 
-    return () => clearTimeout(handler);
+    return () => clearTimeout(timer);
   }, [query, products]);
 
-  return { query, setQuery, results, isSearching };
+  return {
+    query,
+    setQuery,
+    results,
+    isSearching,
+  };
 };
