@@ -4,8 +4,8 @@ import {
   CheckoutFormValues,
   CheckoutFormErrors,
   CheckoutFormTouched,
-} from "@/features/checkout/types/checkout-type";
-import { FormField } from "@/features/checkout/components/form-field";
+} from "../types/checkout-type";
+import { FormField } from "./form-field";
 
 interface Props {
   form: CheckoutFormValues;

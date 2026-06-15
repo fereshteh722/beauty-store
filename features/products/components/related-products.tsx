@@ -1,8 +1,9 @@
 "use client";
 import { useRef } from "react";
 import { ProductCard } from "@/features/products/components/product-card";
+import {Product} from "@/types/product"
 
-export function RelatedProducts({ products }: { products: any[] }) {
+export function RelatedProducts({ products }: { products: Product[] }) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const scroll = (direction: "left" | "right") => {

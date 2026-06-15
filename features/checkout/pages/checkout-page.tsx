@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { CheckoutForm } from "@/features/checkout/components/checkout-form";
-import { useCheckoutForm } from "@/features/checkout/hooks/use-checkout-form";
+import { CheckoutForm } from "../components/checkout-form";
+import { useCheckoutForm } from "../hooks/use-checkout-form";
 
 function generateOrderNumber() {
   const random = Math.floor(1000 + Math.random() * 9000);
