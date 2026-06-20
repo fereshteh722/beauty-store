@@ -3,7 +3,6 @@ import { Product } from "@/types/product";
 import { ProductCard } from "../components/product-card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Container } from "@/components/layout/container";
-// ۱. ایمپورت کردن کامپوننت جدید
 import { CategoryBreadcrumb } from "../components/category-breadcrumb";
 
 interface ProductListPageProps {
