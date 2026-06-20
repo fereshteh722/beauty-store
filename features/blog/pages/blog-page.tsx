@@ -1,6 +1,7 @@
 import { getPosts } from "@/lib/api/posts";
 import { Container } from "@/components/layout/container";
 import { PostCard } from "../components/post-card";
+import { EmptyState } from "@/components/ui/empty-state";
 
 export async function BlogPage() {
   const posts = await getPosts();
@@ -19,9 +20,12 @@ export async function BlogPage() {
         </header>
 
         {posts.length === 0 ? (
-          <div className="text-center py-16 bg-white rounded-3xl border">
-            هنوز مقاله‌ای منتشر نشده
-          </div>
+          <EmptyState
+            title="هنوز مقاله‌ای منتشر نشده"
+            description="ما در حال آماده‌سازی مقالات آموزشی درباره مراقبت پوست و مو هستیم. به زودی مطالب جدیدی منتشر خواهد شد."
+            actionLabel="مشاهده محصولات"
+            actionHref="/products"
+          />
         ) : (
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
             {posts.map((post) => (
