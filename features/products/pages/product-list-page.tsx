@@ -3,29 +3,31 @@ import { Product } from "@/types/product";
 import { ProductCard } from "../components/product-card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Container } from "@/components/layout/container";
+// ۱. ایمپورت کردن کامپوننت جدید
+import { CategoryBreadcrumb } from "../components/category-breadcrumb";
 
 interface ProductListPageProps {
   title: string;
   description: string;
   products: Product[];
+  subcategory?: string; 
 }
 
 export function ProductListPage({
   title,
   description,
   products,
+  subcategory,
 }: ProductListPageProps) {
   return (
     <div className="min-h-screen bg-stone-50/30 pb-20">
       <Container className="pt-8">
-        {/* Breadcrumb */}
-        <nav className="mb-8 flex items-center gap-2 text-[11px] uppercase tracking-[0.15em] text-stone-400">
-          <Link href="/" className="hover:text-pink-600 transition-colors">
-            خانه
-          </Link>
-          <span className="w-1 h-1 rounded-full bg-stone-300" />
-          <span className="text-stone-900 font-semibold">{title}</span>
-        </nav>
+        
+        
+        <CategoryBreadcrumb 
+          category={title} 
+          subcategory={subcategory} 
+        />
 
         {/* Header */}
         <div className="mb-10 flex items-end justify-between gap-6 border-b border-stone-200 pb-6">
